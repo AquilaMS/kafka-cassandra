@@ -1,11 +1,11 @@
 CREATE KEYSPACE IF NOT EXISTS ks_user_spent WITH REPLICATION = {
     'class': 'SimpleStrategy',
     'replication_factor': '1'
-}
+};
 
-CREATE TABLE IF NOT EXISTS user_spent (
+CREATE TABLE IF NOT EXISTS ks_user_spent.user_spent (
     user_id text PRIMARY KEY,
     name text,
     email text,
     spent int
-)
+);

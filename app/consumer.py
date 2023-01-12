@@ -17,11 +17,11 @@ schema = StructType([
 spark = SparkSession\
    .builder\
     .appName('kafka_cass')\
-    .config('spark.connection.host', '127.0.0.1')\
+    .config('spark.connection.host', 'localhost')\
     .config('spark.jars.packages','org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1')\
+    .config('spark.jars.packages','com.datastax.spark:spark-cassandra-connector_2.12:3.2.0')\
     .config('spark.cassandra.connection.host', 'localhost')\
     .getOrCreate()
-
 spark.sparkContext.setLogLevel('WARN')
 
 #read stream from source in json 
