@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 
-#data schema
+
 schema = StructType([ 
     StructField("user_id",StringType(),True), \
     StructField("name",StringType(),True), \
@@ -13,7 +13,6 @@ schema = StructType([
     StructField("spent", IntegerType(), True), 
   ])
 
-#building a spark app session
 spark = SparkSession\
    .builder\
     .appName('kafka_cass')\
@@ -24,7 +23,7 @@ spark = SparkSession\
     .getOrCreate()
 spark.sparkContext.setLogLevel('WARN')
 
-#read stream from source in json 
+
 lines = spark.readStream\
     .format('kafka')\
     .option('kafka.bootstrap.servers', '127.0.0.1:9092')\
@@ -34,7 +33,6 @@ lines = spark.readStream\
     .load()\
     .select(from_json(col('value').cast('string'), schema).alias('users'))
 
-#select from source which data is relevant 
 get_columns = lines.select(
   col('users.user_id').alias('user_id'),
   col('users.name').alias('name'),
@@ -43,8 +41,7 @@ get_columns = lines.select(
 )
   
 get_columns.printSchema()
-
-#select usefull data, parse into json and send to other kafka's topic 
+ 
 write_to_topic = get_columns\
   .select('user_id','name', 'email','spent')\
   .select(to_json(struct(col('user_id'),col('name'), col('email'), col('spent'))).alias('value'))\
